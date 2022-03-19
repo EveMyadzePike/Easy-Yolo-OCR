@@ -26,28 +26,42 @@ def detecting(model, img, im0s, device, img_size, half, option, ciou=20):
         model(torch.zeros(1, 3, img_size, img_size).to(device).type_as(next(model.parameters())))
 
     # 이미지 정규화
+    print("trying to call torch .from_numpy")
     img = torch.from_numpy(img).to(device)
+    print("called torch from numpy")
+    print("trying to call imgh.float")
     img = img.half() if half else img.float()
+    print("called img float")
     img /= 255.0
     if img.ndimension() == 3:
+        print("trying to call img.unsqueexe")
         img = img.unsqueeze(0)
-
+        print("called img.unsqueeze")
+        
     # 추론 & NMS 적용
+    print("trying to call model")
     prediction = model(img, augment=False)[0]
+    print("called model")
+    print("trying to call nms")
     prediction = non_max_suppression(prediction, confidence, iou, classes=None, agnostic=False)
-
+    print("called nms")
+    
     detect = None
     for _, det in enumerate(prediction):
         obj, det[:, :4] = {}, scale_coords(img.shape[2:], det[:, :4], im0s.shape).round()
+        print("trying to det.cpu \n")
         detect = det.cpu()
+        print("called det.cpu \n")
 
     # 중복 상자 제거
     detList = []
     for *rect, conf, cls in detect:
         detList.append((rect, conf, cls))
-
+    
+    print("trying to call unsorted remove intersect box det \n")
     detect = unsorted_remove_intersect_box_det(detList, ciou)
-
+    print("called unsoretd remove \n")
+    
     return detect
 
 
