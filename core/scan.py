@@ -69,19 +69,30 @@ def pt_detect(path, device, models, ciou, reader, gray=False, byteMode=False):
     half = device.type != 'cpu'
     # config 로드
     with open('config.yaml', 'r') as f:
+        print("trying to load config.yaml")
         config = yaml.safe_load(f)
+        print("loaded config.yaml")
     img_size, confidence, iou = config['detection-size'], config['detection-confidence'], config['detection-iou']
     detection_option = (img_size, confidence, iou)
     f.close()
-
+    
+    print("Trying to call model_setting")
     model, stride, img_size, names = model_setting(driver_weights, half, detection_option[0])
+    print("successfully called model_settting")
+    print("Trying to call Image Pack")
     image_pack = ImagePack(path, img_size, stride, byteMode=byteMode, gray=gray)
+    print("successfuly called Image Pack")
     img, im0s = image_pack.getImg()
+    print("trying to call detecting")
     det = detecting(model, img, im0s, device, img_size, half, detection_option[1:], ciou)
+    print("successfully called detecting \n")
+    print("trying to call detection")
     rect_list, label_list = detection(det, names)
-
+    print("called detection")
+    print("trying to call reader.recogss")
     result = reader.recogss(im0s, rect_list)
-
+    print("called reader.recogss")
+    
     result_line, i = [], 0
     print(f'----------- {path} -----------')
     for r in result:
