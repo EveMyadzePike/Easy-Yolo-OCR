@@ -43,8 +43,12 @@ def main(arg):
 
             # pytorch 검출
             try:
-                #start_time = time_sync()
+                print("trying to call time_sync \n")
+                start_time = time_sync()
+                print("successfully called time_sync \n")
+                print("trying to call pt_detect \n")
                 pt_detect(img, device, detection_model, ciou, reader, gray=gray, byteMode=False)
+                print("succesfully called pt_detect \n")
                 print('detecting time:', time_sync() - start_time)
             except Exception as e:
                 print("detecting Fail")
