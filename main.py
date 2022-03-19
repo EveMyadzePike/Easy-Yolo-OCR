@@ -30,6 +30,7 @@ def main(arg):
 
     # 모델 세팅
     lang_list = lang.split('/')
+    #specify english and custom recognition model
     reader = Reader(lang_list)
 
     detection_model = attempt_load(detection, map_location=device)
