@@ -39,7 +39,8 @@ class Reader(object):
             lang_list (list): Language codes (ISO 639) for languages to be recognized during analysis.
 
             gpu (bool): Enable GPU support (default)
-
+            
+            #Note for usage below#
             model_storage_directory (string): Path to directory for model data. If not specified,
             models will be read from a directory as defined by the environment variable
             EASYOCR_MODULE_PATH (preferred), MODULE_PATH (if defined), or ~/.EasyOCR/.
@@ -51,15 +52,16 @@ class Reader(object):
             download_enabled (bool): Enabled downloading of model data via HTTP (default).
         """
         self.download_enabled = download_enabled
-
+        
+        #Change so that model_storage_directory is a (string)/path to a folder containing a .pth file 
         self.model_storage_directory = MODULE_PATH + '/model'
         if model_storage_directory:
-            self.model_storage_directory = model_storage_directory
+            self.model_storage_directory = model_storage_directory #UPDATE!
         Path(self.model_storage_directory).mkdir(parents=True, exist_ok=True)
 
         self.user_network_directory = MODULE_PATH + '/user_network'
         if user_network_directory:
-            self.user_network_directory = user_network_directory
+            self.user_network_directory = user_network_directory #also update and put path
         Path(self.user_network_directory).mkdir(parents=True, exist_ok=True)
         sys.path.append(self.user_network_directory)
 
@@ -198,7 +200,8 @@ class Reader(object):
                     assert calculate_md5(model_path) == model['filesize'], corrupt_msg
                     LOGGER.info('Download complete')
             self.setLanguageList(lang_list, model)
-
+        
+        #Use my trained model
         else: # user-defined model
             with open(os.path.join(self.user_network_directory, recog_network+ '.yaml'), encoding='utf8') as file:
                 recog_config = yaml.load(file, Loader=yaml.FullLoader)
