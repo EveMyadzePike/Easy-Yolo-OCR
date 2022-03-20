@@ -22,8 +22,8 @@ def model_setting(model, half, imgz):
 # pt 검출
 def detecting(model, img, im0s, device, img_size, half, option, ciou=20):
     confidence, iou = option
-    if device.type != 'cpu':
-        model(torch.zeros(1, 3, img_size, img_size).to(device).type_as(next(model.parameters())))
+    #if device.type != 'cpu':
+    model(torch.zeros(1, 3, img_size, img_size).to(device).type_as(next(model.parameters())))
 
     # 이미지 정규화
     print("trying to call torch .from_numpy")
